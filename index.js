@@ -43,4 +43,47 @@ function md5Dir (dirname, cb) {
   })
 }
 
+function md5DirSync (dirpath, ignorePaths) {
+  if (!fs.existsSync(dirpath)) {
+    throw new Error(dirpath + ' does not exist.')
+  } else if (!fs.statSync(dirpath).isDirectory()) {
+    throw new Error(dirpath + ' is not a directory.')
+  }
+
+  ignorePaths = ignorePaths || []
+
+  if (!Array.isArray(ignorePaths)) {
+    ignorePaths = [ignorePaths]
+  }
+  for (var i = 0; i < ignorePaths.length; i++) {
+    ignorePaths[i] = fs.realpathSync(ignorePaths[i])
+  }
+
+  var files = fs.readdirSync(dirpath)
+  var hash = crypto.createHash('md5')
+
+  for (i = 0; i < files.length; i++) {
+    var fullPath = fs.realpathSync(dirpath + '/' + files[i])
+
+    if (ignorePaths.indexOf(fullPath) !== -1) {
+      continue
+    }
+
+    var fileStats = fs.statSync(fullPath)
+    var fileHash
+    if (fileStats.isDirectory()) {
+      fileHash = md5DirSync(fullPath, ignorePaths)
+    } else if (fileStats.isFile()) {
+      fileHash = md5File.sync(fullPath)
+    } else {
+      continue
+    }
+
+    hash.update(fileHash)
+  }
+
+  return hash.digest('hex')
+}
+
 module.exports = md5Dir
+module.exports.sync = md5DirSync
