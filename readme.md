@@ -21,8 +21,8 @@ md5Dir('Documents', (err, hash) => {
 })
 
 /* Sync usage */
-const hash = md5Dir.sync('Documents')
-console.log(`The MD5 sum of Documents is: ${hash}`)
+const hash = md5Dir.sync('Documents', ['./path/to/dir/foo/', './path/to/dir/bar.txt'])
+console.log(`The MD5 sum of Documents excluding './path/to/dir/foo/' and './path/to/dir/bar.txt' is: ${hash}`)
 ```
 
 ## Promise support
@@ -46,9 +46,9 @@ Asynchronously get the MD5-sum of the directory at `dirname`.
 
 The callback `cb` will be called with `(err: Error, hash: string)`.
 
-### `md5Dir.sync(dirname: string) => string`
+### `md5Dir.sync(dirname: string, ignorePaths: string[] | string) => string'
 
-Synchronously get the MD5-sum of the directory at `dirname`.
+Synchronously get the MD5-sum of all files in `dirname` excluding paths from `ignorePaths`.
 
 ### License
 
