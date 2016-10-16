@@ -18,9 +18,11 @@ describe('MD5 Directory', function () {
     })
   })
 
-  it('should provide a promise-based interface', function () {
-    return md5DirAsPromised(fixtures).then(function (hash) {
-      assert.equal(hash, '1c3063c41c4e4aee0bfeeabc55fddb9b')
+  if (typeof global.Promise !== 'undefined') {
+    it('should provide a promise-based interface', function () {
+      return md5DirAsPromised(fixtures).then(function (hash) {
+        assert.equal(hash, '1c3063c41c4e4aee0bfeeabc55fddb9b')
+      })
     })
-  })
+  }
 })
