@@ -1,0 +1,17 @@
+{
+  "name": "md5-dir",
+  "version": "0.0.0",
+  "license": "MIT",
+  "repository": "LinusU/md5-dir",
+  "scripts": {
+    "test": "standard && mocha"
+  },
+  "dependencies": {
+    "async-each": "^1.0.1",
+    "md5-file": "^3.1.1"
+  },
+  "devDependencies": {
+    "mocha": "^3.1.2",
+    "standard": "^8.4.0"
+  }
+}
