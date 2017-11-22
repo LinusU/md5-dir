@@ -7,12 +7,21 @@ var crypto = require('crypto')
 var each = require('async-each')
 var md5File = require('md5-file')
 
-function md5Dir (dirname, cb) {
+function md5Dir (dirname, cb, options) {
+  var ignorePaths = !!options && options.ignorePaths || []
+  if (!Array.isArray(ignorePaths)) {
+    ignorePaths = [ignorePaths]
+  }
+
   fs.readdir(dirname, function (err, files) {
     if (err) return cb(err)
 
     function iterator (file, cb) {
       var filepath = path.join(dirname, file)
+
+      if (ignorePaths.indexOf(filepath) !== -1) {
+        return cb(null, null)
+      }
 
       fs.stat(filepath, function (err, stat) {
         if (err) return cb(err)
@@ -22,7 +31,7 @@ function md5Dir (dirname, cb) {
         }
 
         if (stat.isDirectory()) {
-          return md5Dir(filepath, cb)
+          return md5Dir(filepath, cb, {ignorePaths: ignorePaths})
         }
 
         return cb(null, null)
