@@ -43,14 +43,14 @@ function md5Dir (dirname, cb) {
   })
 }
 
-function md5DirSync (dirpath, ignorePaths) {
+function md5DirSync (dirpath, options) {
   if (!fs.existsSync(dirpath)) {
     throw new Error(dirpath + ' does not exist.')
   } else if (!fs.statSync(dirpath).isDirectory()) {
     throw new Error(dirpath + ' is not a directory.')
   }
 
-  ignorePaths = ignorePaths || []
+  var ignorePaths = !!options && options.ignorePaths || []
 
   if (!Array.isArray(ignorePaths)) {
     ignorePaths = [ignorePaths]
@@ -72,7 +72,7 @@ function md5DirSync (dirpath, ignorePaths) {
     var fileStats = fs.statSync(fullPath)
     var fileHash
     if (fileStats.isDirectory()) {
-      fileHash = md5DirSync(fullPath, ignorePaths)
+      fileHash = md5DirSync(fullPath, {ignorePaths: ignorePaths})
     } else if (fileStats.isFile()) {
       fileHash = md5File.sync(fullPath)
     } else {
