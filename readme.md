@@ -18,11 +18,11 @@ md5Dir('Documents', (err, hash) => {
   if (err) throw err
 
   console.log(`The MD5 sum of Documents is: ${hash}`)
-})
+}, {ignorePaths: ['./path/to/dir/foo/', './path/to/dir/bar.txt']})
 
 /* Sync usage */
-const hash = md5Dir.sync('Documents')
-console.log(`The MD5 sum of Documents is: ${hash}`)
+const hash = md5Dir.sync('Documents', {ignorePaths: ['./path/to/dir/foo/', './path/to/dir/bar.txt']})
+console.log(`The MD5 sum of Documents excluding './path/to/dir/foo/' and './path/to/dir/bar.txt' is: ${hash}`)
 ```
 
 ## Promise support
@@ -40,15 +40,15 @@ md5Dir('Documents').then(hash => {
 
 ## API
 
-### `md5Dir(dirname: string, cb: function)`
+### `md5Dir(dirname: string, cb: function, options?: {ignorePaths: string[] | string})`
 
 Asynchronously get the MD5-sum of the directory at `dirname`.
 
 The callback `cb` will be called with `(err: Error, hash: string)`.
 
-### `md5Dir.sync(dirname: string) => string`
+### `md5Dir.sync(dirname: string, options?: {ignorePaths: string[] | string}) => string'
 
-Synchronously get the MD5-sum of the directory at `dirname`.
+Synchronously get the MD5-sum of all files in `dirname` excluding paths from `ignorePaths`.
 
 ### License
 

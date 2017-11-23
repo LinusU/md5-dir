@@ -7,12 +7,21 @@ var crypto = require('crypto')
 var each = require('async-each')
 var md5File = require('md5-file')
 
-function md5Dir (dirname, cb) {
+function md5Dir (dirname, cb, options) {
+  var ignorePaths = !!options && options.ignorePaths || []
+  if (!Array.isArray(ignorePaths)) {
+    ignorePaths = [ignorePaths]
+  }
+
   fs.readdir(dirname, function (err, files) {
     if (err) return cb(err)
 
     function iterator (file, cb) {
       var filepath = path.join(dirname, file)
+
+      if (ignorePaths.indexOf(filepath) !== -1) {
+        return cb(null, null)
+      }
 
       fs.stat(filepath, function (err, stat) {
         if (err) return cb(err)
@@ -22,7 +31,7 @@ function md5Dir (dirname, cb) {
         }
 
         if (stat.isDirectory()) {
-          return md5Dir(filepath, cb)
+          return md5Dir(filepath, cb, {ignorePaths: ignorePaths})
         }
 
         return cb(null, null)
@@ -43,4 +52,47 @@ function md5Dir (dirname, cb) {
   })
 }
 
+function md5DirSync (dirpath, options) {
+  if (!fs.existsSync(dirpath)) {
+    throw new Error(dirpath + ' does not exist.')
+  } else if (!fs.statSync(dirpath).isDirectory()) {
+    throw new Error(dirpath + ' is not a directory.')
+  }
+
+  var ignorePaths = !!options && options.ignorePaths || []
+
+  if (!Array.isArray(ignorePaths)) {
+    ignorePaths = [ignorePaths]
+  }
+  for (var i = 0; i < ignorePaths.length; i++) {
+    ignorePaths[i] = fs.realpathSync(ignorePaths[i])
+  }
+
+  var files = fs.readdirSync(dirpath)
+  var hash = crypto.createHash('md5')
+
+  for (i = 0; i < files.length; i++) {
+    var fullPath = fs.realpathSync(dirpath + '/' + files[i])
+
+    if (ignorePaths.indexOf(fullPath) !== -1) {
+      continue
+    }
+
+    var fileStats = fs.statSync(fullPath)
+    var fileHash
+    if (fileStats.isDirectory()) {
+      fileHash = md5DirSync(fullPath, {ignorePaths: ignorePaths})
+    } else if (fileStats.isFile()) {
+      fileHash = md5File.sync(fullPath)
+    } else {
+      continue
+    }
+
+    hash.update(fileHash)
+  }
+
+  return hash.digest('hex')
+}
+
 module.exports = md5Dir
+module.exports.sync = md5DirSync

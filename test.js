@@ -18,6 +18,14 @@ describe('MD5 Directory', function () {
     })
   })
 
+  it('should compute the hash of a directory syncronously', function (done) {
+    var hash = md5Dir.sync(fixtures)
+
+    assert.equal(hash, '1c3063c41c4e4aee0bfeeabc55fddb9b')
+
+    done()
+  })
+
   if (typeof global.Promise !== 'undefined') {
     it('should provide a promise-based interface', function () {
       return md5DirAsPromised(fixtures).then(function (hash) {
