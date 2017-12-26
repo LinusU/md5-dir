@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "async-each": "^1.0.1",
+    "ignore": "^3.3.7",
     "md5-file": "^3.1.1"
   },
   "devDependencies": {
