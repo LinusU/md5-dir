@@ -43,4 +43,25 @@ function md5Dir (dirname, cb) {
   })
 }
 
+function md5DirSync (dirname) {
+  var files = fs.readdirSync(dirname)
+  var hash = crypto.createHash('md5')
+
+  for (var i = 0; i < files.length; i++) {
+    var filepath = path.join(dirname, files[i])
+    var stat = fs.statSync(filepath)
+
+    if (stat.isFile()) {
+      hash.update(md5File.sync(filepath))
+    }
+
+    if (stat.isDirectory()) {
+      hash.update(md5DirSync(filepath))
+    }
+  }
+
+  return hash.digest('hex')
+}
+
 module.exports = md5Dir
+module.exports.sync = md5DirSync
