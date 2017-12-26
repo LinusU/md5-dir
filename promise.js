@@ -13,3 +13,4 @@ function md5DirAsPromised (dirname) {
 }
 
 module.exports = md5DirAsPromised
+module.exports.sync = md5Dir.sync
