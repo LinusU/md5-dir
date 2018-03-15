@@ -40,15 +40,21 @@ md5Dir('Documents').then(hash => {
 
 ## API
 
-### `md5Dir(dirname: string, cb: function)`
+### `md5Dir(dirname: string[, options: Options], cb: function)`
 
 Asynchronously get the MD5-sum of the directory at `dirname`.
 
 The callback `cb` will be called with `(err: Error, hash: string)`.
 
-### `md5Dir.sync(dirname: string) => string`
+### `md5Dir.sync(dirname: string[, options: Options]) => string`
 
 Synchronously get the MD5-sum of the directory at `dirname`.
+
+### `Options`
+
+#### `ignore`
+
+File or list of files to ignore. Follows the same format as `.gitignore`-files. Uses the [`ignore` module](https://github.com/kaelzhang/node-ignore).
 
 ### License
 
