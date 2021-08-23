@@ -105,5 +105,17 @@ function md5DirSync (dirname, options) {
   return run('')
 }
 
-module.exports = md5Dir
+module.exports = (dirname, options, cb) => {
+  if (cb) return md5Dir(dirname, options, cb)
+
+  return new Promise((resolve, reject) => {
+    md5Dir(dirname, options, (error, hash) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve(hash)
+      }
+    })
+  })
+}
 module.exports.sync = md5DirSync

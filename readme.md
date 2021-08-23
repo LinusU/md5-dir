@@ -27,11 +27,10 @@ console.log(`The MD5 sum of Documents is: ${hash}`)
 
 ## Promise support
 
-If you require `md5-dir/promise` you'll receive an alternative API where all
-functions that takes callbacks are replaced by `Promise`-returning functions.
+You can optionally exclude the callback argument to receive a promise:
 
 ```js
-const md5Dir = require('md5-dir/promise')
+const md5Dir = require('md5-dir')
 
 md5Dir('Documents').then(hash => {
   console.log(`The MD5 sum of Documents is: ${hash}`)
@@ -40,7 +39,7 @@ md5Dir('Documents').then(hash => {
 
 ## API
 
-### `md5Dir(dirname: string[, options: Options], cb: function)`
+### `md5Dir(dirname: string[, options: Options], cb?: function)`
 
 Asynchronously get the MD5-sum of the directory at `dirname`.
 
