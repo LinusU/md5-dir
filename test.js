@@ -4,7 +4,6 @@ var path = require('path')
 var assert = require('assert')
 
 var md5Dir = require('./')
-var md5DirAsPromised = require('./promise')
 
 var fixtures = path.join(__dirname, 'fixtures')
 
@@ -72,13 +71,13 @@ describe('MD5 Directory', function () {
 
   if (typeof global.Promise !== 'undefined') {
     it('should provide a promise-based interface (async)', function () {
-      return md5DirAsPromised(fixtures).then(function (hash) {
+      return md5Dir(fixtures).then(function (hash) {
         assert.equal(hash, EXPECTED)
       })
     })
 
     it('should provide a promise-based interface (sync)', function () {
-      var hash = md5DirAsPromised.sync(fixtures)
+      var hash = md5Dir.sync(fixtures)
       assert.equal(hash, EXPECTED)
     })
   }
